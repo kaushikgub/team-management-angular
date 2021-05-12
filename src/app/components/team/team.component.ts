@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {Team} from 'src/app/data/team';
-import {CountryService} from 'src/app/service/country.service';
-import {TeamService} from 'src/app/service/team.service';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Team } from 'src/app/data/models';
+import { CountryService } from 'src/app/service/country.service';
+import { TeamService } from 'src/app/service/team.service';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -20,6 +20,7 @@ export class TeamComponent implements OnInit {
   });
 
   showModal: boolean = false;
+  editId: number = null;
 
   teams: Team[] = [];
 
@@ -69,7 +70,13 @@ export class TeamComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.teamForm.value);
+    if (this.editId === null)
+      this.save();
+    else
+      this.update();
+  }
+
+  save() {
     this.teamService.saveData(this.teamForm.value).subscribe(
       (response) => {
         console.log(response);
@@ -88,12 +95,41 @@ export class TeamComponent implements OnInit {
     );
   }
 
+  update() {
+    this.teamService.updateData(this.editId, this.teamForm.value).subscribe(
+      (response) => {
+        console.log(response);
+        let target = this.teams.find(obj => obj.id === this.editId);
+        
+        this.showModal = false;
+        this.editId = null;
+        this.toastr.success(response['message'], 'Success')
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
   delete(id: number) {
     this.teamService.deleteData(id).subscribe(
       (response) => {
-        console.log(response['message']);
+        console.log(response);
         this.teams = this.teams.filter(obj => obj.id !== id);
         this.toastr.info(response['message'], 'Success')
+      }, (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  edit(id: number) {
+    this.teamService.getData(id).subscribe(
+      (response) => {
+        console.log(response);
+        this.teamForm.patchValue({ ...response['data'] })
+        this.editId = response['data']?.id;
+        this.modalOpen();
       }, (error) => {
         console.log(error);
       }

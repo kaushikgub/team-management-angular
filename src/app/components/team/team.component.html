@@ -1,31 +1,31 @@
 <div class="row">
   <div class="col">
-    <button class="btn btn-sm btn-primary" (click)="modalOpen()">Create</button>
+    <button class="btn btn-sm btn-success" (click)="modalOpen()"><i class="fa fa-plus"></i> Create</button>
   </div>
 </div>
 <div class="row mt-2">
   <div class="col">
     <table class="table">
       <thead>
-      <tr>
-        <th>Sl</th>
-        <th>Name</th>
-        <th>Country</th>
-        <th>Couch</th>
-        <th>Action</th>
-      </tr>
+        <tr>
+          <th>Sl</th>
+          <th>Name</th>
+          <th>Country</th>
+          <th>Couch</th>
+          <th>Action</th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let team of teams; index as i">
-        <td>{{ ((i + 1) + '').padStart(2, '0') }}</td>
-        <td>{{ team.name }}</td>
-        <td>{{ team.country }}</td>
-        <td>{{ team.couch }}</td>
-        <td>
-          <button class="btn btn-sm btn-warning me-2"><i class="far fa-edit"></i></button>
-          <button (click)="delete(team.id)" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-        </td>
-      </tr>
+        <tr *ngFor="let team of teams; index as i">
+          <td>{{ ((i + 1) + '').padStart(2, '0') }}</td>
+          <td>{{ team.name }}</td>
+          <td>{{ team.country }}</td>
+          <td>{{ team.couch }}</td>
+          <td>
+            <button (click)="edit(team.id)" class="btn btn-sm btn-warning me-2"><i class="far fa-edit"></i></button>
+            <button (click)="delete(team.id)" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -38,28 +38,18 @@
       <div class="modal-header">
         <h5 class="modal-title">Team</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                (click)="modalClose()"></button>
+          (click)="modalClose()"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]='teamForm' (submit)="submit()">
+        <form #form='ngForm' [formGroup]='teamForm' (submit)="submit(); form.resetForm()">
           <div class="form-floating mb-2">
-            <input
-              formControlName="name"
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Team Name"
-              autocomplete="off"
-            >
+            <input formControlName="name" type="text" class="form-control" id="name" placeholder="Team Name"
+              autocomplete="off">
             <label for="name">Team Name</label>
           </div>
 
           <div class="form-floating mb-2">
-            <select
-              formControlName="country"
-              class="form-select"
-              id="country"
-            >
+            <select formControlName="country" class="form-select" id="country">
               <option *ngFor="let country of countries" [ngValue]="country.name">
                 {{ country.name }}
               </option>
@@ -68,24 +58,15 @@
           </div>
 
           <div class="form-floating mb-2">
-            <input
-              formControlName="couch"
-              type="text"
-              class="form-control"
-              id="couch"
-              placeholder="Couch Name"
-              autocomplete="off"
-            >
+            <input formControlName="couch" type="text" class="form-control" id="couch" placeholder="Couch Name"
+              autocomplete="off">
             <label for="couch">Couch Name</label>
           </div>
-<!--          <div *ngIf="couch.errors.required" class="alert alert-danger">-->
-<!--            Couch name is required-->
-<!--          </div>-->
           <div class="float-end">
             <button type="button" class="btn btn-sm btn-secondary me-1" data-bs-dismiss="modal"
-                    (click)="modalClose()">Close
+              (click)="modalClose()"><i class="fa fa-backward"></i> Close
             </button>
-            <button type="submit" class="btn btn-sm btn-primary">Save</button>
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i> {{ editId ? 'Update' : 'Create' }}</button>
           </div>
         </form>
       </div>

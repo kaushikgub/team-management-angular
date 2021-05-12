@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Team } from '../data/team';
+import { Team } from '../data/models';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class TeamService {
   }
 
   getData(id: number){
-    return this.http.get(`${this.baseUrl}/${id}`);
+    return this.http.get(`${this.baseUrl}/${id}/edit`);
   }
   
   saveData(data: Team){
@@ -29,6 +29,6 @@ export class TeamService {
   }
 
   updateData(id: number, data: Team){
-    return this.http.post(`${this.baseUrl}/${id}`, data);
+    return this.http.put(`${this.baseUrl}/${id}`, data);
   }
 }
